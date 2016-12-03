@@ -5,6 +5,8 @@
  */
 package attendance;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,7 +14,8 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,18 +45,16 @@ public class Input extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        letIn = new javax.swing.JTextArea();
+        paid = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
-        keepOut = new javax.swing.JTextArea();
+        notPaid = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         notOnList = new javax.swing.JTextArea();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        letInTitle = new javax.swing.JTextArea();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        dontLetInTitle = new javax.swing.JTextArea();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        notOnListTitle = new javax.swing.JTextArea();
         inputField = new javax.swing.JFormattedTextField();
+        paidLabel = new javax.swing.JLabel();
+        notPaidLabel = new javax.swing.JLabel();
+        notOnListLabel = new javax.swing.JLabel();
+        imageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -73,47 +74,26 @@ public class Input extends javax.swing.JFrame {
         jTextArea2.setAutoscrolls(false);
         jScrollPane2.setViewportView(jTextArea2);
 
-        letIn.setEditable(false);
-        letIn.setColumns(20);
-        letIn.setRows(5);
-        jScrollPane3.setViewportView(letIn);
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        keepOut.setEditable(false);
-        keepOut.setColumns(20);
-        keepOut.setRows(5);
-        jScrollPane4.setViewportView(keepOut);
+        paid.setEditable(false);
+        paid.setColumns(20);
+        paid.setRows(5);
+        jScrollPane3.setViewportView(paid);
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        notPaid.setEditable(false);
+        notPaid.setColumns(20);
+        notPaid.setRows(5);
+        jScrollPane4.setViewportView(notPaid);
+
+        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         notOnList.setEditable(false);
         notOnList.setColumns(20);
         notOnList.setRows(5);
         jScrollPane5.setViewportView(notOnList);
-
-        jScrollPane6.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane6.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        letInTitle.setEditable(false);
-        letInTitle.setColumns(20);
-        letInTitle.setRows(5);
-        letInTitle.setText("Let in");
-        jScrollPane6.setViewportView(letInTitle);
-
-        jScrollPane7.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane7.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        dontLetInTitle.setEditable(false);
-        dontLetInTitle.setColumns(20);
-        dontLetInTitle.setRows(5);
-        dontLetInTitle.setText("Don't let in\n");
-        jScrollPane7.setViewportView(dontLetInTitle);
-
-        jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane8.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        notOnListTitle.setEditable(false);
-        notOnListTitle.setColumns(20);
-        notOnListTitle.setRows(5);
-        notOnListTitle.setText("Not on the List");
-        jScrollPane8.setViewportView(notOnListTitle);
 
         inputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,47 +101,64 @@ public class Input extends javax.swing.JFrame {
             }
         });
 
+        paidLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        paidLabel.setLabelFor(paid);
+        paidLabel.setText("Paid");
+
+        notPaidLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        notPaidLabel.setLabelFor(notPaid);
+        notPaidLabel.setText("Not Paid");
+
+        notOnListLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        notOnListLabel.setLabelFor(notOnList);
+        notOnListLabel.setText("Not on List");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                    .addComponent(inputField))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imageLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jScrollPane7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addComponent(paidLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(notPaidLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(notOnListLabel)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(paidLabel)
+                        .addComponent(notPaidLabel)
+                        .addComponent(notOnListLabel))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
-                            .addComponent(jScrollPane4)
-                            .addComponent(jScrollPane5))
-                        .addGap(6, 6, 6))
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(inputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imageLabel))
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane5))
+                .addContainerGap())
         );
 
         pack();
@@ -184,37 +181,59 @@ public class Input extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    
-    
     private static void checkName() throws FileNotFoundException, IOException
     {
         //stores the input from the formatted text field
         idNum = Integer.parseInt(inputField.getText());
+        
+        //int for number of rows
+        int numRows = 0;
         
         //clears the input field
         inputField.setText("");
         
         //System.out.println(idNum);
         
-         //start of reading excel file
+        //start of reading excel file
         FileInputStream file = new FileInputStream(new File(filePath));
         
         HSSFWorkbook workbook = new HSSFWorkbook(file);
         HSSFSheet sheet = workbook.getSheetAt(0);
         
-        for (Row row : sheet) 
+        //creates int with num of rows containing data
+        //int rows = sheet.getPhysicalNumberOfRows();
+       
+        for (Row row : sheet)
+        //for (int i = 0; i < numRows; i++)
         {
+            
             Cell cell1 = row.getCell(0);
             
             if((int)cell1.getNumericCellValue() == idNum)
             {
                 Cell lastName = row.getCell(1);
                 Cell firstName = row.getCell(2);
+                Cell grade = row.getCell(4);
                 
-                addingName = lastName.getStringCellValue() + " " + firstName.getStringCellValue();
+                addingName = (int)grade.getNumericCellValue() + "    " + lastName.getStringCellValue() + " " + firstName.getStringCellValue();
                 
-                letIn.append(addingName);
-                letIn.append("\n");
+                String paidStatus = row.getCell(3).toString();
+                
+                switch (paidStatus) {
+                    case "Y":
+                        paid.append(addingName);
+                        paid.append("\n");
+                        break;
+                    case "N":
+                        notPaid.append(addingName);
+                        notPaid.append("\n");
+                        break;
+                    default:
+                        notOnList.append(addingName);
+                        notOnList.append("\n");
+                        break;
+                }
+                
             }
             
         }
@@ -257,8 +276,7 @@ public class Input extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Input.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
-        
+       
         if(fileChosen)
         {
             /* Create and display the form */
@@ -327,20 +345,18 @@ public class Input extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea dontLetInTitle;
+    public static javax.swing.JLabel imageLabel;
     public static javax.swing.JFormattedTextField inputField;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTextArea jTextArea2;
-    public static javax.swing.JTextArea keepOut;
-    public static javax.swing.JTextArea letIn;
-    private javax.swing.JTextArea letInTitle;
     public static javax.swing.JTextArea notOnList;
-    private javax.swing.JTextArea notOnListTitle;
+    private javax.swing.JLabel notOnListLabel;
+    public static javax.swing.JTextArea notPaid;
+    private javax.swing.JLabel notPaidLabel;
+    public static javax.swing.JTextArea paid;
+    private javax.swing.JLabel paidLabel;
     // End of variables declaration//GEN-END:variables
 }
