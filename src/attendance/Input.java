@@ -172,7 +172,8 @@ public class Input extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         int result = JOptionPane.showConfirmDialog(null, "Exit the application?");
-        if (result==JOptionPane.OK_OPTION) {
+        if (result==JOptionPane.OK_OPTION) 
+        {
             System.exit(0);     
         }
     }//GEN-LAST:event_formWindowClosing
@@ -202,7 +203,6 @@ public class Input extends javax.swing.JFrame {
         for (Row row : sheet)
         //for (int i = 0; i < numRows; i++)
         {
-            
             Cell cell1 = row.getCell(0);
             
             if((int)cell1.getNumericCellValue() == idNum)
@@ -229,11 +229,8 @@ public class Input extends javax.swing.JFrame {
                         notOnList.append("\n");
                         break;
                 }
-                
             }
-            
         }
-        
     }
     
     public static void main(String args[]) throws IOException, FileNotFoundException
@@ -282,7 +279,6 @@ public class Input extends javax.swing.JFrame {
                 }
             });
         }
-        
     }
     
     public static void fileImport() throws IOException
@@ -315,12 +311,10 @@ public class Input extends javax.swing.JFrame {
               chooseError = "Choose a file that ends with .xls";
               confirmChoice();
           }
-          
         } else
         {
             confirmChoice();
-        }
-        
+        } 
     }
     
     public static void confirmChoice()
@@ -337,7 +331,6 @@ public class Input extends javax.swing.JFrame {
                 Logger.getLogger(Input.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
