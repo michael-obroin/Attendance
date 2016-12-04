@@ -176,7 +176,7 @@ public class Input extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         int result = JOptionPane.showConfirmDialog(null, "Exit the application?");
-        if (result==JOptionPane.OK_OPTION) 
+        if (result == JOptionPane.OK_OPTION) 
         {
             System.exit(0);     
         }
@@ -184,11 +184,11 @@ public class Input extends javax.swing.JFrame {
 
     private static void checkName() throws FileNotFoundException, IOException
     {
+        //if the input is found on the list this is set to true
+        boolean foundID = false;
+        
         //stores the input from the formatted text field
         idNum = Integer.parseInt(inputField.getText());
-        
-        //int for number of rows - not needed
-        //int numRows = 0;
         
         //clears the input field
         inputField.setText("");
@@ -200,9 +200,6 @@ public class Input extends javax.swing.JFrame {
         
         HSSFWorkbook workbook = new HSSFWorkbook(file);
         HSSFSheet sheet = workbook.getSheetAt(0);
-        
-        //creates int with num of rows containing data
-        //int rows = sheet.getPhysicalNumberOfRows();
        
         for (Row row : sheet)
         //for (int i = 0; i < numRows; i++)
@@ -211,6 +208,7 @@ public class Input extends javax.swing.JFrame {
             
             if((int)cell1.getNumericCellValue() == idNum)
             {
+                //foundID = true;
                 Cell lastName = row.getCell(1);
                 Cell firstName = row.getCell(2);
                 Cell grade = row.getCell(4);
@@ -235,6 +233,11 @@ public class Input extends javax.swing.JFrame {
                 }
             }
         }
+//        if(foundID)
+//        {
+//            notOnList.append(Integer.toString(idNum));
+//            notOnList.append("\n");
+//        }
     }
     
     public static void main(String args[]) throws IOException, FileNotFoundException
@@ -244,10 +247,12 @@ public class Input extends javax.swing.JFrame {
         {
             fileImport();
         } catch (Exception e) {
+            //not entirely sure if setting it to false is needed
             fileChosen = false;
             confirmChoice();
         }
-
+        
+        //debugging
         //System.out.println(filePath);
         
         /* Set the Nimbus look and feel */
@@ -273,33 +278,20 @@ public class Input extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Input.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
-//        BufferedImage img = null;
-//        try {
-//            img = ImageIO.read(new File("strawberry.jpg"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        
-//        BufferedImage dimg = (BufferedImage)img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-//        
-//        ImageIcon imageIcon = new ImageIcon(dimg);
-//        
-//        //= new JLabel("Image and Text", imageIcon, imageLabel.CENTER);
-//        
+           
         if(fileChosen)
         {
             /* Create and display the form */
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    new Input().setVisible(true);
-                }
+            //apparently this is a labda now, guess it works
+            java.awt.EventQueue.invokeLater(() -> {
+                new Input().setVisible(true);
             });
         }
     }
     
     public static void fileImport() throws IOException
     {   
+        //variable assignment
         fileChosen = true;
         chooseError = "";
         
@@ -307,10 +299,11 @@ public class Input extends javax.swing.JFrame {
         String userhome = System.getProperty("user.home");
         JFileChooser chooser = new JFileChooser(userhome + "\\Desktop");
         
-        
+        //opens filechooser, assigns choice to status
         int status = chooser.showOpenDialog(null);
         File file = chooser.getSelectedFile();
 
+        //if they don't click approve, assume no file chosen
         if (status != JFileChooser.APPROVE_OPTION)
         {
             //System.out.println("No File Chosen");
@@ -318,28 +311,24 @@ public class Input extends javax.swing.JFrame {
             chooseError = "No File Chosen";
         }
         
-        //if the file doesn't end with .xls, restart filechooser
+        //if a file is chosen but not ending in .xls, restart
         if(fileChosen)
         {
-          filePath = file.getAbsolutePath();
+            filePath = file.getAbsolutePath();
           
-          if(!filePath.endsWith(".xls"))
-          {
+            if(!filePath.endsWith(".xls"))
+            {
               chooseError = "Choose a file that ends with .xls";
               confirmChoice();
-          }
-        } else
-        {
-            confirmChoice();
-        } 
+            }
+        }
     }
     
     public static void confirmChoice()
     {
-        int choice;
-        choice = JOptionPane.showConfirmDialog(null, "Do You want to quit?", chooseError, JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "Do You want to quit?", chooseError, JOptionPane.YES_NO_OPTION);
         
-        //only tries filechooser again if they explicity say they don't want to quit
+        //only tries filechooser again if they explicitly say they don't want to quit
         if(choice == JOptionPane.NO_OPTION)
         {
             try {
