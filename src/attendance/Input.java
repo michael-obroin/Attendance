@@ -309,6 +309,7 @@ public class Input extends javax.swing.JFrame {
             //System.out.println("No File Chosen");
             fileChosen = false;
             chooseError = "No File Chosen";
+            confirmChoice();
         }
         
         //if a file is chosen but not ending in .xls, restart
@@ -318,7 +319,7 @@ public class Input extends javax.swing.JFrame {
           
             if(!filePath.endsWith(".xls"))
             {
-              chooseError = "Choose a file that ends with .xls";
+              chooseError = "File Doesn't End with .xls";
               confirmChoice();
             }
         }
