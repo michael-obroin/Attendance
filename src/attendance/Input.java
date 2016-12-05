@@ -70,6 +70,7 @@ public class Input extends javax.swing.JFrame {
         jTextArea2.setText("Scan the ID Below");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
+        jTextArea2.setFocusable(false);
         jScrollPane2.setViewportView(jTextArea2);
 
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -77,6 +78,7 @@ public class Input extends javax.swing.JFrame {
         paid.setEditable(false);
         paid.setColumns(20);
         paid.setRows(5);
+        paid.setFocusable(false);
         jScrollPane3.setViewportView(paid);
 
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -84,6 +86,7 @@ public class Input extends javax.swing.JFrame {
         notPaid.setEditable(false);
         notPaid.setColumns(20);
         notPaid.setRows(5);
+        notPaid.setFocusable(false);
         jScrollPane4.setViewportView(notPaid);
 
         jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -91,6 +94,7 @@ public class Input extends javax.swing.JFrame {
         notOnList.setEditable(false);
         notOnList.setColumns(20);
         notOnList.setRows(5);
+        notOnList.setFocusable(false);
         jScrollPane5.setViewportView(notOnList);
 
         inputField.addActionListener(new java.awt.event.ActionListener() {
@@ -102,17 +106,21 @@ public class Input extends javax.swing.JFrame {
         paidLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         paidLabel.setLabelFor(paid);
         paidLabel.setText("Paid");
+        paidLabel.setFocusable(false);
 
         notPaidLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         notPaidLabel.setLabelFor(notPaid);
         notPaidLabel.setText("Not Paid");
+        notPaidLabel.setFocusable(false);
 
         notOnListLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         notOnListLabel.setLabelFor(notOnList);
         notOnListLabel.setText("Not on List");
+        notOnListLabel.setFocusable(false);
 
         imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/attendance/SI.png"))); // NOI18N
         imageLabel.setLabelFor(this);
+        imageLabel.setFocusable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
