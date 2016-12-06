@@ -23,6 +23,7 @@ public class Input extends javax.swing.JFrame {
     static String filePath, addingName = "null", chooseError;
     static int idNum;
     static boolean fileChosen = true, endsWith;
+    static int idCol = 0, nameFirstCol = 2, nameLastCol = 1, paidStatusCol = 3, gradeCol = 4;
     
     public Input() {
         initComponents();
@@ -127,12 +128,15 @@ public class Input extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(inputField)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                    .addComponent(imageLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputField)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(imageLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(paidLabel)
@@ -162,8 +166,9 @@ public class Input extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(inputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(imageLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(imageLabel)
+                        .addGap(33, 33, 33))
                     .addComponent(jScrollPane4)
                     .addComponent(jScrollPane5))
                 .addContainerGap())
@@ -217,13 +222,13 @@ public class Input extends javax.swing.JFrame {
             if((int)cell1.getNumericCellValue() == idNum)
             {
                 //foundID = true;
-                Cell lastName = row.getCell(1);
-                Cell firstName = row.getCell(2);
-                Cell grade = row.getCell(4);
+                Cell lastName = row.getCell(nameLastCol);
+                Cell firstName = row.getCell(nameFirstCol);
+                Cell grade = row.getCell(gradeCol);
                 
                 addingName = (int)grade.getNumericCellValue() + "    " + lastName.getStringCellValue() + " " + firstName.getStringCellValue();
                 
-                String paidStatus = row.getCell(3).toString();
+                String paidStatus = row.getCell(paidStatusCol).toString();
                 
                 switch (paidStatus) {
                     case "Y":
