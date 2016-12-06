@@ -23,7 +23,7 @@ public class Input extends javax.swing.JFrame {
     static String filePath, addingName = "null", chooseError;
     static int idNum;
     static boolean fileChosen = true, endsWith;
-    static int idCol = 0, nameFirstCol = 2, nameLastCol = 1, paidStatusCol = 3, gradeCol = 4;
+    static int idCol = 0, nameFirstCol = 2, nameLastCol = 1, paidStatusCol = 4, gradeCol = 3;
     
     public Input() {
         initComponents();
@@ -197,9 +197,6 @@ public class Input extends javax.swing.JFrame {
 
     private static void checkName() throws FileNotFoundException, IOException
     {
-        //if the input is found on the list this is set to true
-        boolean foundID = false;
-        
         //stores the input from the formatted text field
         idNum = Integer.parseInt(inputField.getText());
         
@@ -246,11 +243,6 @@ public class Input extends javax.swing.JFrame {
                 }
             }
         }
-//        if(foundID)
-//        {
-//            notOnList.append(Integer.toString(idNum));
-//            notOnList.append("\n");
-//        }
     }
     
     public static void main(String args[]) throws IOException, FileNotFoundException
@@ -259,9 +251,10 @@ public class Input extends javax.swing.JFrame {
         try 
         {
             fileImport();
-        } catch (Exception e) {
+        } catch (IOException e) {
             //not entirely sure if setting it to false is needed
             fileChosen = false;
+            e.printStackTrace();
             confirmChoice();
         }
         
