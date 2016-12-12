@@ -13,10 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Input extends javax.swing.JFrame {
 
@@ -208,8 +212,18 @@ public class Input extends javax.swing.JFrame {
         //start of reading excel file
         FileInputStream file = new FileInputStream(new File(filePath));
         
+//        WorkbookFactory wb = new WorkbookFactory();
+        
+//        try {
+//            wb.create(file);
+//        } catch (InvalidFormatException | EncryptedDocumentException ex) {
+//            Logger.getLogger(Input.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
         HSSFWorkbook workbook = new HSSFWorkbook(file);
         HSSFSheet sheet = workbook.getSheetAt(0);
+        
+        //Sheet sheet = wb.getSheetAt(0);
        
         for (Row row : sheet)
         //for (int i = 0; i < numRows; i++)
@@ -254,7 +268,6 @@ public class Input extends javax.swing.JFrame {
         } catch (IOException e) {
             //not entirely sure if setting it to false is needed
             fileChosen = false;
-            e.printStackTrace();
             confirmChoice();
         }
         
