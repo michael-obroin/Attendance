@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -28,6 +29,7 @@ public class Input extends javax.swing.JFrame {
     static int idNum;
     static boolean fileChosen = true, endsWith;
     static int idCol = 0, nameFirstCol = 2, nameLastCol = 1, paidStatusCol = 4, gradeCol = 3;
+    static ArrayList<String> alreadyPaidAL = new ArrayList<>();
     
     public Input() {
         initComponents();
@@ -50,11 +52,11 @@ public class Input extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         notPaid = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        notOnList = new javax.swing.JTextArea();
+        alreadyCheckedIn = new javax.swing.JTextArea();
         inputField = new javax.swing.JFormattedTextField();
         paidLabel = new javax.swing.JLabel();
         notPaidLabel = new javax.swing.JLabel();
-        notOnListLabel = new javax.swing.JLabel();
+        alreadyCheckedInLabel = new javax.swing.JLabel();
         imageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -96,11 +98,11 @@ public class Input extends javax.swing.JFrame {
 
         jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        notOnList.setEditable(false);
-        notOnList.setColumns(20);
-        notOnList.setRows(5);
-        notOnList.setFocusable(false);
-        jScrollPane5.setViewportView(notOnList);
+        alreadyCheckedIn.setEditable(false);
+        alreadyCheckedIn.setColumns(20);
+        alreadyCheckedIn.setRows(5);
+        alreadyCheckedIn.setFocusable(false);
+        jScrollPane5.setViewportView(alreadyCheckedIn);
 
         inputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,10 +120,10 @@ public class Input extends javax.swing.JFrame {
         notPaidLabel.setText("Not Paid");
         notPaidLabel.setFocusable(false);
 
-        notOnListLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        notOnListLabel.setLabelFor(notOnList);
-        notOnListLabel.setText("Not on List");
-        notOnListLabel.setFocusable(false);
+        alreadyCheckedInLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        alreadyCheckedInLabel.setLabelFor(alreadyCheckedIn);
+        alreadyCheckedInLabel.setText("Already Checked In");
+        alreadyCheckedInLabel.setFocusable(false);
 
         imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/attendance/SI.png"))); // NOI18N
         imageLabel.setLabelFor(this);
@@ -132,15 +134,12 @@ public class Input extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(inputField)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(imageLabel)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(inputField)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                    .addComponent(imageLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(paidLabel)
@@ -150,9 +149,9 @@ public class Input extends javax.swing.JFrame {
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(notPaidLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(notOnListLabel)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(alreadyCheckedInLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -163,7 +162,7 @@ public class Input extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(paidLabel)
                         .addComponent(notPaidLabel)
-                        .addComponent(notOnListLabel))
+                        .addComponent(alreadyCheckedInLabel))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -241,26 +240,38 @@ public class Input extends javax.swing.JFrame {
                 
                 String paidStatus = row.getCell(paidStatusCol).toString();
                 
-                switch (paidStatus) {
-                    case "Y":
-                        paid.append(addingName);
-                        paid.append("\n");
-                        break;
-                    case "N":
-                        notPaid.append(addingName);
-                        notPaid.append("\n");
-                        break;
-                    default:
-                        notOnList.append(addingName);
-                        notOnList.append("\n");
-                        break;
+                //System.out.println("IF the AL contains the name this should be true: " + alreadyPaidAL.contains(addingName));
+                
+                if(!alreadyPaidAL.contains(addingName))
+                {
+                    switch (paidStatus) 
+                    {
+                        case "Y":
+                            paid.append(addingName + "\n");
+                            break;
+                        case "N":
+                            notPaid.append(addingName + "\n");
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    alreadyCheckedIn.append(addingName + "\n");
                 }
+                
+                alreadyPaidAL.add(addingName);
+                
+                //debugging
+                //alreadyPaidAL.add("hello world");
+                //System.out.println(alreadyPaidAL);
+                
             }
         }
     }
     
     public static void main(String args[]) throws IOException, FileNotFoundException
     {
+        alreadyPaidAL.clear();
         //sets the file path as the file chosen  
         try 
         {
@@ -360,6 +371,8 @@ public class Input extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JTextArea alreadyCheckedIn;
+    private javax.swing.JLabel alreadyCheckedInLabel;
     public static javax.swing.JLabel imageLabel;
     public static javax.swing.JFormattedTextField inputField;
     private javax.swing.JScrollPane jScrollPane2;
@@ -367,8 +380,6 @@ public class Input extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea2;
-    public static javax.swing.JTextArea notOnList;
-    private javax.swing.JLabel notOnListLabel;
     public static javax.swing.JTextArea notPaid;
     private javax.swing.JLabel notPaidLabel;
     public static javax.swing.JTextArea paid;
