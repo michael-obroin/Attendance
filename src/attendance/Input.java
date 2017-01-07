@@ -367,14 +367,14 @@ public class Input extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jCheckedInLabel;
-    public static javax.swing.JTextArea jCheckedInTextArea;
-    public static javax.swing.JLabel jImageLabel;
-    public static javax.swing.JFormattedTextField jInputField;
+    private static javax.swing.JTextArea jCheckedInTextArea;
+    private static javax.swing.JLabel jImageLabel;
+    private static javax.swing.JFormattedTextField jInputField;
     private javax.swing.JLabel jInputLabel;
     private javax.swing.JLabel jNotPaidLabel;
-    public static javax.swing.JTextArea jNotPaidTextArea;
+    private static javax.swing.JTextArea jNotPaidTextArea;
     private javax.swing.JLabel jPaidLabel;
-    public static javax.swing.JTextArea jPaidTextArea;
+    private static javax.swing.JTextArea jPaidTextArea;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
