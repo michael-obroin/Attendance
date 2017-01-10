@@ -7,6 +7,7 @@ package attendance;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,7 +30,7 @@ public class CheckIn extends javax.swing.JFrame {
     private static int idNum;
     private static boolean fileChosen = true;
     private static final int ID_COL = 0, NAMEFIRST_COL = 2, NAMELAST_COL = 1, PAIDSTATUS_COL = 4, GRADE_COL = 3;
-    private static ArrayList<String> alreadyPaidAL = new ArrayList<>();
+    private static final ArrayList<String> alreadyPaidAL = new ArrayList<>();
     
     public CheckIn() {
         initComponents();
@@ -304,7 +305,7 @@ public class CheckIn extends javax.swing.JFrame {
     private static void flashColor(Color c, JTextArea ta)
     {
         ta.setBackground(c);
-        Timer timer = new Timer(0, (ActionEvent listener) -> {ta.setBackground(Color.WHITE);} );
+        Timer timer = new Timer(0, (ActionEvent listener) -> { ta.setBackground(Color.WHITE); });
         timer.setInitialDelay(500);
         timer.setRepeats(false);
         timer.start();
