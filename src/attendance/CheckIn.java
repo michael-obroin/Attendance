@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,13 +24,16 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class CheckIn extends javax.swing.JFrame {
 
     private static String filePath, addingName = "null", chooseError;
-    private static int idNum;
+    private static String idNum;
     private static boolean fileChosen = true;
-    private static final int ID_COL = 0, NAMEFIRST_COL = 2, NAMELAST_COL = 1, PAIDSTATUS_COL = 4, GRADE_COL = 3;
+    private static final int ID_COL = 0, NAMEFIRST_COL = 4, NAMELAST_COL = 3, PAIDSTATUS_COL = 5, GRADE_COL = 3;
     private static final ArrayList<String> alreadyPaidAL = new ArrayList<>();
     
     public CheckIn() {
@@ -183,6 +187,11 @@ public class CheckIn extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, "Exit the application?");
         if (result == JOptionPane.OK_OPTION) 
         {
+            try {
+                whoCheckedIn();
+            } catch (IOException ex) {
+                Logger.getLogger(CheckIn.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.exit(0);     
         }
     }//GEN-LAST:event_formWindowClosing
@@ -233,12 +242,44 @@ public class CheckIn extends javax.swing.JFrame {
                 new CheckIn().setVisible(true);
             });
         }
+        
+    }
+    
+    public static void whoCheckedIn() throws FileNotFoundException, IOException
+    {
+        String filename = System.getProperty("user.home") + "/Desktop" + "/checkedIn.xlsx";
+            
+        Workbook outputWorkbook = new XSSFWorkbook();
+        
+        Sheet sheet1 = outputWorkbook.createSheet("Checked In");
+        
+        for (int i = 0; i < alreadyPaidAL.size(); i++) 
+        {
+            String get = alreadyPaidAL.get(i);
+            
+            Row currentRow = sheet1.createRow(i);
+            
+            Cell currentCell = currentRow.createCell(0);
+            currentCell.setCellValue(get);
+            
+            //Cell current2 = currentRow.createCell(1);
+            
+            for (int k = 0; k < 9; k++) 
+            {
+                sheet1.autoSizeColumn(k);
+            }
+            
+            try (FileOutputStream fileOut = new FileOutputStream(filename)) {
+                outputWorkbook.write(fileOut);
+            }
+            System.out.println("Your excel file has been generated!");
+        }
     }
     
     private static void checkName() throws FileNotFoundException, IOException
     {
         //stores the input from the formatted text field
-        idNum = Integer.parseInt(jInputField.getText());
+        idNum = jInputField.getText();
         
         //clears the input field
         jInputField.setText("");
@@ -256,16 +297,16 @@ public class CheckIn extends javax.swing.JFrame {
         //loops through the excel file looking for a match for the idNumber
         for (Row row : sheet)
         {
-            Cell cell1 = row.getCell(ID_COL);
+            String cell1 = row.getCell(ID_COL).toString();
             
-            if((int)cell1.getNumericCellValue() == idNum)
+            if(cell1.equals(idNum))
             {
                 //foundID = true;
                 Cell lastName = row.getCell(NAMELAST_COL);
                 Cell firstName = row.getCell(NAMEFIRST_COL);
-                Cell grade = row.getCell(GRADE_COL);
+                //Cell grade = row.getCell(GRADE_COL);
                 
-                addingName = (int)grade.getNumericCellValue() + "    " + lastName.getStringCellValue() + " " + firstName.getStringCellValue();
+                addingName = lastName.getStringCellValue() + " " + firstName.getStringCellValue();
                 
                 String paidStatus = row.getCell(PAIDSTATUS_COL).toString();
                 
