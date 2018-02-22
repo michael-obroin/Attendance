@@ -7,7 +7,6 @@ package attendance;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,17 +23,17 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class CheckIn extends javax.swing.JFrame {
 
     private static String filePath, addingName = "null", chooseError;
     private static String idNum;
     private static boolean fileChosen = true;
-    private static final int ID_COL = 0, NAMEFIRST_COL = 4, NAMELAST_COL = 3, PAIDSTATUS_COL = 5, GRADE_COL = 3;
+    private static final int NAME_COL = 2;
+    private static final int ID_COL = 0, PAIDSTATUS_COL = 3, CHECKED_IN_COL = 4;
     private static final ArrayList<String> alreadyPaidAL = new ArrayList<>();
+    private static FileInputStream file;
+    private static HSSFWorkbook workbook;
     
     public CheckIn() {
         initComponents();
@@ -188,7 +187,10 @@ public class CheckIn extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) 
         {
             try {
-                whoCheckedIn();
+                FileOutputStream fileOut = new FileOutputStream(filePath);
+                workbook.write(fileOut);
+                fileOut.close();
+                
             } catch (IOException ex) {
                 Logger.getLogger(CheckIn.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -245,41 +247,41 @@ public class CheckIn extends javax.swing.JFrame {
         
     }
     
-    public static void whoCheckedIn() throws FileNotFoundException, IOException
-    {
-        String filename = System.getProperty("user.home") + "/Desktop" + "/checkedIn.xlsx";
-            
-        Workbook outputWorkbook = new XSSFWorkbook();
-        
-        Sheet sheet1 = outputWorkbook.createSheet("Checked In");
-        
-        for (int i = 0; i < alreadyPaidAL.size(); i++) 
-        {
-            String get = alreadyPaidAL.get(i);
-            
-            Row currentRow = sheet1.createRow(i);
-            
-            Cell currentCell = currentRow.createCell(0);
-            currentCell.setCellValue(get);
-            
-            //Cell current2 = currentRow.createCell(1);
-            
-            for (int k = 0; k < 9; k++) 
-            {
-                sheet1.autoSizeColumn(k);
-            }
-            
-            try (FileOutputStream fileOut = new FileOutputStream(filename)) {
-                outputWorkbook.write(fileOut);
-            }
-            System.out.println("Your excel file has been generated!");
-        }
-    }
+//    public static void whoCheckedIn() throws FileNotFoundException, IOException
+//    {
+//        String filename = System.getProperty("user.home") + "/Desktop" + "/checkedIn.xlsx";
+//            
+//        Workbook outputWorkbook = new XSSFWorkbook();
+//        
+//        Sheet sheet1 = outputWorkbook.createSheet("Checked In");
+//        
+//        for (int i = 0; i < alreadyPaidAL.size(); i++) 
+//        {
+//            String get = alreadyPaidAL.get(i);
+//            
+//            Row currentRow = sheet1.createRow(i);
+//            
+//            Cell currentCell = currentRow.createCell(0);
+//            currentCell.setCellValue(get);
+//            
+//            //Cell current2 = currentRow.createCell(1);
+//            
+//            for (int k = 0; k < 9; k++) 
+//            {
+//                sheet1.autoSizeColumn(k);
+//            }
+//            
+//            try (FileOutputStream fileOut = new FileOutputStream(filename)) {
+//                outputWorkbook.write(fileOut);
+//            }
+//            System.out.println("Your excel file has been generated!");
+//        }
+//    }
     
     private static void checkName() throws FileNotFoundException, IOException
     {
         //stores the input from the formatted text field
-        idNum = jInputField.getText();
+        idNum = jInputField.getText() + ".0";
         
         //clears the input field
         jInputField.setText("");
@@ -288,61 +290,58 @@ public class CheckIn extends javax.swing.JFrame {
         //System.out.println(idNum);
         
         //start of reading excel file
-        FileInputStream file = new FileInputStream(new File(filePath));
+        file = new FileInputStream(new File(filePath));
         
         //creates workbook and sheet objects from the chosen file
-        HSSFWorkbook workbook = new HSSFWorkbook(file);
-        HSSFSheet sheet = workbook.getSheetAt(0);
-       
-        //loops through the excel file looking for a match for the idNumber
-        for (Row row : sheet)
+        workbook = new HSSFWorkbook(file);
+        
+        ArrayList<HSSFSheet> sheets = new ArrayList();
+        sheets.add(workbook.getSheetAt(0));
+        sheets.add(workbook.getSheetAt(1));
+        sheets.add(workbook.getSheetAt(2));
+        sheets.add(workbook.getSheetAt(3));
+        for(HSSFSheet sheet : sheets)
         {
-            String cell1 = row.getCell(ID_COL).toString();
-            
-            if(cell1.equals(idNum))
+            //loops through the excel file looking for a match for the idNumber
+            for (Row row : sheet)
             {
-                //foundID = true;
-                Cell lastName = row.getCell(NAMELAST_COL);
-                Cell firstName = row.getCell(NAMEFIRST_COL);
-                //Cell grade = row.getCell(GRADE_COL);
                 
-                addingName = lastName.getStringCellValue() + " " + firstName.getStringCellValue();
+                String cell1 = row.getCell(ID_COL).toString();
                 
-                String paidStatus = row.getCell(PAIDSTATUS_COL).toString();
-                
-                //debugging
-                //System.out.println("IF the AL contains the name this should be true: " + alreadyPaidAL.contains(addingName));
-                
-                if(!alreadyPaidAL.contains(addingName))
+                if(cell1.equals(idNum))
                 {
-                    switch (paidStatus) 
+                    //System.out.println(cell1);
+                    //foundID = true;
+                    Cell name = row.getCell(NAME_COL);
+                    addingName = name.getStringCellValue();
+
+                    //System.out.println(addingName);
+                    String paidStatus = row.getCell(PAIDSTATUS_COL).toString();
+                    //System.out.println(paidStatus);
+                    
+                    if(row.getCell(CHECKED_IN_COL).toString().equals("Checked In"))
                     {
-                        case "Y":
-                            jPaidTextArea.append(addingName + "\n");
-                            flashColor(Color.GREEN, jPaidTextArea);
-                            break;
-                        case "N":
-                            jNotPaidTextArea.append(addingName + "\n");
-                            flashColor(Color.red, jNotPaidTextArea);
-                            break;
-                        default:
-                            break;
+                        jCheckedInTextArea.append(addingName + "\n");
+                        //row.getCell(CHECKED_IN_COL).setCellValue("Checked In");
+
+                        flashColor(Color.red, jCheckedInTextArea);
+                    }else if(!paidStatus.equals(""))
+                    {
+                        //System.out.println("at addingname");
+                        jPaidTextArea.append(addingName + "\n");
+                        row.getCell(CHECKED_IN_COL).setCellValue("Checked In");
+
+                        flashColor(Color.GREEN, jPaidTextArea);
+                    } else 
+                    {
+                        jNotPaidTextArea.append(addingName + "\n");
+                        row.getCell(CHECKED_IN_COL).setCellValue("Checked In");
+                        flashColor(Color.red, jNotPaidTextArea);
                     }
-                } else {
-                    jCheckedInTextArea.append(addingName + "\n");
-                    flashColor(Color.red, jCheckedInTextArea);
                 }
-                
-                alreadyPaidAL.add(addingName);
-                
-                //debugging
-                //alreadyPaidAL.add("hello world");
-                //System.out.println(alreadyPaidAL);
-                
             }
         }
     }
-    
     private static void flashColor(Color c, JTextArea ta)
     {
         ta.setBackground(c);
