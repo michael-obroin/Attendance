@@ -23,6 +23,9 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class CheckIn extends javax.swing.JFrame {
 
@@ -33,8 +36,9 @@ public class CheckIn extends javax.swing.JFrame {
     private static final int NUM_SHEETS = 4;
     private static final int ID_COL = 0, PAIDSTATUS_COL = 3, CHECKED_IN_COL = 4;
     private static final ArrayList<String> alreadyPaidAL = new ArrayList<>();
-    private static FileInputStream file;
-    private static HSSFWorkbook workbook;
+    private static FileInputStream file1;
+    private static ArrayList<Sheet> sheets = new ArrayList();
+    private static Workbook workbook;
     
     public CheckIn() {
         initComponents();
@@ -201,8 +205,6 @@ public class CheckIn extends javax.swing.JFrame {
 
     public static void main(String args[]) throws IOException, FileNotFoundException
     {
-        alreadyPaidAL.clear();
-        //sets the file path as the file chosen  
         try 
         {
             fileImport();
@@ -211,9 +213,6 @@ public class CheckIn extends javax.swing.JFrame {
             fileChosen = false;
             confirmChoice();
         }
-        
-        //debugging
-        //System.out.println(filePath);
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -249,38 +248,17 @@ public class CheckIn extends javax.swing.JFrame {
     
     private static void checkName() throws FileNotFoundException, IOException
     {
-        //stores the input from the formatted text field
         idNum = jInputField.getText() + ".0";
-        
-        //clears the input field
         jInputField.setText("");
         
-        //debugging
-        //System.out.println(idNum);
-        
-        //start of reading excel file
-        file = new FileInputStream(new File(filePath));
-        
-        //creates workbook and sheet objects from the chosen file
-        workbook = new HSSFWorkbook(file);
-        
-        ArrayList<HSSFSheet> sheets = new ArrayList();
-        for (int i = 0; i < NUM_SHEETS; i++) 
+        for(Sheet sheet : sheets)
         {
-            sheets.add(workbook.getSheetAt(i));
-        }
-        for(HSSFSheet sheet : sheets)
-        {
-            //loops through the excel file looking for a match for the idNumber
             for (Row row : sheet)
             {
-                
                 String cell1 = row.getCell(ID_COL).toString();
                 
                 if(cell1.equals(idNum))
                 {
-                    //System.out.println(cell1);
-                    //foundID = true;
                     Cell name = row.getCell(NAME_COL);
                     addingName = name.getStringCellValue();
 
@@ -338,17 +316,17 @@ public class CheckIn extends javax.swing.JFrame {
             chooseError = "No File Chosen";
             confirmChoice();
         }
+
+        file1 = new FileInputStream(new File(filePath));
         
-        //if a file is chosen but not ending in .xls, restart
-        if(fileChosen)
+        if(filePath.endsWith(".xls"))
+            workbook = new HSSFWorkbook(file1);
+        else if(filePath.endsWith(".xlsx"))
+            workbook = new XSSFWorkbook(file1);
+        
+        for (int i = 0; i < NUM_SHEETS; i++) 
         {
-            filePath = file.getAbsolutePath();
-          
-            if(!filePath.endsWith(".xls"))
-            {
-              chooseError = "File Doesn't End with .xls";
-              confirmChoice();
-            }
+            sheets.add(workbook.getSheetAt(i));
         }
     }
     
