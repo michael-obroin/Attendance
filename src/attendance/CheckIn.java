@@ -19,7 +19,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -192,9 +191,9 @@ public class CheckIn extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) 
         {
             try {
-                FileOutputStream fileOut = new FileOutputStream(filePath);
-                workbook.write(fileOut);
-                fileOut.close();
+                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                    workbook.write(fileOut);
+                }
                 
             } catch (IOException ex) {
                 Logger.getLogger(CheckIn.class.getName()).log(Level.SEVERE, null, ex);
@@ -307,7 +306,8 @@ public class CheckIn extends javax.swing.JFrame {
         //opens filechooser, assigns choice to status
         int status = chooser.showOpenDialog(null);
         File file = chooser.getSelectedFile();
-
+        filePath = file.getAbsolutePath();
+        
         //if they don't click approve, assume no file chosen
         if (status != JFileChooser.APPROVE_OPTION)
         {
